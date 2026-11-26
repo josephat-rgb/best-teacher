@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="sw"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEST TEACHER</title>
+<style>
+*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#eef2f7;padding:12px}
+.h{background:#0b3d91;color:#fff;padding:18px;border-radius:14px;text-align:center}.h h1{margin:0}.h p{margin:4px 0 0}
+.card{background:#fff;padding:16px;border-radius:12px;margin-top:12px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+input,select,textarea{width:100%;padding:11px;margin:6px 0;border:1px solid #ddd;border-radius:8px;font-size:15px}
+button{padding:12px;border:0;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:6px}
+.b{width:100%;background:#0b3d91;color:#fff}.g{width:100%;background:#0f9d58;color:#fff}.r{background:#d93025;color:#fff}
+.hidden{display:none}.row{display:flex;gap:8px}.row>*{flex:1}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ddd;padding:5px;text-align:center}th{background:#0b3d91;color:#fff}
+td input{width:55px;padding:6px;margin:0;text-align:center}
+img.p{width:70px;height:70px;border-radius:50%;object-fit:cover;background:#ddd}.teacher{border:1px solid #eee;padding:10px;border-radius:10px;margin-top:8px;display:flex;gap:10px;align-items:center}
+.msg{padding:8px;border-radius:8px;margin:5px 0;background:#f1f5ff}.me{background:#dcf8c6}
+.tab{display:flex;gap:6px;flex-wrap:wrap}.tab button{background:#ddd;flex:1}.tab button.on{background:#0b3d91;color:#fff}
+canvas{width:100%;background:#fff;border-radius:10px}.scroll{overflow:auto}
+.badge{background:#f59e0b;color:#fff;padding:3px 8px;border-radius:20px;font-size:12px}
+@media print{
+body{padding:0;background:#fff}
+body *{visibility:hidden}
+.printArea,.printArea *{visibility:visible}
+.printArea{position:absolute;left:0;top:0;width:100%;background:#fff;overflow:visible!important;max-height:none!important}
+.printArea table{font-size:10px;width:100%}
+.printArea th{color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.printArea td,.printArea td b{color:#000!important}
+@page{size:A3 landscape;margin:5mm}
+}
+</style></head><body>
+<div class="h">
+<img id="schoolLogo" src="" style="width:80px;height:80px;border-radius:50%;background:#fff;object-fit:cover;display:none;margin:0 auto" onerror="this.style.display='none'">
+<h1>BEST TEACHER</h1>
+<p id="slogan">Elimu Bora, Mwalimu Bora, Taifa Bora</p>
+<p id="schoolName" style="font-size:14px;margin:4px 0">JINA LA SHULE</p>
+<div class="row"><select id="lang" onchange="setLang()"><option value="sw">Kiswahili</option><option value="en">English</option></select></div></div>
+<div id="status" style="text-align:center;font-weight:bold;margin:8px">✅ Tayari - Ingia</div>
+<div id="authBox" class="card"><h2 id="authT">Ingia</h2>
+<input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password">
+<button class="b" onclick="login()" id="btnLogin">INGIA</button><button class="g" onclick="register()" id="btnReg">JISAJILI MPYA</button></div>
+<div id="main" class="hidden">
+<div class="tab">
+<button id="t1" class="on" onclick="tab('profile')">👤 Profile</button>
+<button id="t2" onclick="tab('students')">👨‍🎓 Wanafunzi</button>
+<button id="t3" onclick="tab('results')">📊 Matokeo</button>
+<button id="t9" onclick="tab('saved')">💾 Saved</button>
+<button id="t4" onclick="tab('stats')">📈 Takwimu</button>
+<button id="t5" onclick="tab('chat')">💬 Chat</button>
+<button id="t6" onclick="tab('irisBox')">✨ Iris AI</button>
+<button id="t7" onclick="tab('admin')">🛡️ Admin</button>
+<button id="t8" onclick="tab('setting')">⚙️ Setting</button>
+</div>
+<div id="profile" class="card">
+<h3 id="ph_profile">👤 Wasifu Wangu</h3>
+<img id="myPic" class="p" src="" style="display:none" onerror="this.style.display='none'"><div id="myInitial" style="width:70px;height:70px;border-radius:50%;background:#0b3d91;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold">J</div><br>
+<div id="roleBadge"></div>
+<input id="pName" placeholder="Jina Kamili"><input id="pPhone" placeholder="Namba ya Simu">
+<input id="pPhoto" placeholder="Link ya Picha (URL)"><input id="pSubjects" placeholder="Masomo Unayofundisha">
+<input id="pClasses" placeholder="Madarasa Unayofundisha">
+<textarea id="pBio" placeholder="Maelezo kuhusu wewe"></textarea>
+<button class="g" onclick="saveProfile()" id="btnSaveProfile">HIFADHI PROFILE</button>
+<p id="myInfo"></p></div>
+<div id="students" class="card hidden"><h3 id="ph_students">👨‍🎓 Wanafunzi</h3>
+<label id="lblClass">Chagua Darasa</label>
+<select id="filterClass" onchange="renderStudents()">
+<option value="Form 1">Form 1</option><option value="Form 2">Form 2</option><option value="Form 3">Form 3</option><option value="Form 4">Form 4</option>
+</select>
+<div id="adminAddBox">
+<input id="sName" placeholder="Jina la Mwanafunzi">
+<select id="sGender"><option>Mvulana</option><option>Msichana</option></select>
+<input id="sParent" placeholder="Jina / Namba ya Mzazi">
+<button class="g" onclick="addStudent()" id="btnAddStudent">ONGEZA MWANAFUNZI</button>
+</div>
+<input id="searchS" placeholder="Tafuta mwanafunzi..." oninput="renderStudents()">
+<div id="studentList"></div></div>
+<div id="results" class="card hidden"><h3 id="ph_results">📊 Matokeo ya Mtihani</h3>
+<label>Mtihani</label>
+<div class="row">
+<select id="examName" onchange="buildResultTable()">
+<option value="Monthly">Monthly</option><option value="Terminal">Terminal</option><option value="Mock">Mock</option><option value="Annual">Annual</option><option value="Mid-Term">Mid-Term</option>
+</select>
+<input id="examNameCustom" placeholder="Au andika Mtihani mwingine..." oninput="buildResultTable()">
+</div>
+<label id="lblResClass">Chagua Darasa</label>
+<select id="resClass" onchange="buildResultTable()">
+<option value="Form 1">Form 1</option><option value="Form 2">Form 2</option><option value="Form 3">Form 3</option><option value="Form 4">Form 4</option>
+</select>
+<div class="scroll printArea" id="printArea">
+<div style="text-align:center">
+<img id="printLogo" src="" style="width:70px;height:70px;object-fit:cover;display:none;margin:0 auto">
+<h2 id="printSchoolName" style="margin:4px 0">JINA LA SHULE</h2>
+<h3 style="text-align:center;margin:4px 0" id="printTitle">Mtihani: Monthly - Matokeo ya Form 1</h3>
+<p id="printSub" style="font-size:12px">BEST TEACHER - Elimu Bora, Mwalimu Bora, Taifa Bora</p>
+</div>
+<table><thead><tr><th>S/N</th><th style="min-width:120px">Jina</th><th>Chem</th><th>Kisw</th><th>Bio</th><th>Civ</th><th>His</th><th>Geo</th><th>B/Maths</th><th>Eng</th><th>Phys</th><th>Average</th><th>Division</th><th>Point</th></tr></thead><tbody id="resBody"></tbody></table>
+<p style="text-align:right;margin-top:20px;font-size:12px">Sahihi ya Mwalimu: ________________ &nbsp;&nbsp; Sahihi ya Mkuu: ________________</p>
+</div>
+<button class="g" onclick="saveAllResults()" id="btnSaveResults">HIFADHI MATOKEO</button>
+<button class="b" onclick="downloadPDF()" id="btnPDF">📄 PAKUA PDF / PRINT</button>
+<div id="resSummary"></div>
+</div>
+<div id="saved" class="card hidden">
+<h3>💾 Matokeo Yaliyohifadhiwa - Saved</h3>
+<p style="font-size:12px;color:#555">Hapa unaona matokeo yote yaliyohifadhiwa na Walimu wote, na nani aliye-save.</p>
+<label>Chuja Darasa</label>
+<select id="savedClass" onchange="loadSaved()">
+<option value="All">Madarasa Yote</option>
+<option value="Form 1">Form 1</option>
+<option value="Form 2">Form 2</option>
+<option value="Form 3">Form 3</option>
+<option value="Form 4">Form 4</option>
+</select>
+<label>Chuja Mtihani</label>
+<select id="savedExam" onchange="loadSaved()">
+<option value="All">Mtihani Yote</option>
+<option value="Monthly">Monthly</option><option value="Terminal">Terminal</option><option value="Mock">Mock</option><option value="Annual">Annual</option><option value="Mid-Term">Mid-Term</option>
+</select>
+<input id="searchSaved" placeholder="Tafuta mwanafunzi au mwalimu..." oninput="loadSaved()">
+<div id="savedList"></div>
+</div>
+<div id="stats" class="card hidden"><h3 id="ph_stats">📈 Takwimu za Performance</h3>
+<select id="statClass" onchange="drawChart()"><option value="Form 1">Form 1</option><option value="Form 2">Form 2</option><option value="Form 3">Form 3</option><option value="Form 4">Form 4</option></select>
+<canvas id="chart" height="180"></canvas><div id="statText"></div></div>
+<div id="chat" class="card hidden"><h3 id="ph_chat">💬 Chat na Mwalimu Mwenzake</h3>
+<p style="font-size:12px;color:#555">Chat ya Walimu wote - kila mtu anaona.</p>
+<div id="chatBox"></div><input id="chatMsg" placeholder="Andika ujumbe...">
+<button class="b" onclick="sendChat()" id="btnSendChat">TUMA</button>
+<hr>
+<h3>🔒 Chat ya Siri na Admin</h3>
+<p style="font-size:12px;color:#555">Siri kati yako na Admin tu. Walimu wengine hawaoni.</p>
+<div id="privateChatBox"></div><input id="privateMsg" placeholder="Andika ujumbe wa siri kwa Admin...">
+<button class="b" onclick="sendPrivateChat()">TUMA KWA ADMIN</button></div>
+<div id="irisBox" class="card hidden"><h3>✨ Iris - Msaidizi wa AI</h3>
+<div id="irisChat"></div><input id="irisQ" placeholder="Uliza Iris...">
+<button class="b" onclick="askIris()" id="btnAskIris">ULIZA IRIS</button></div>
+<div id="comments" class="card"><h3 id="ph_comments">💭 Comments za Mwanafunzi</h3>
+<select id="comStudent"></select><textarea id="comText" placeholder="Andika comment..."></textarea>
+<button class="b" onclick="addComment()" id="btnAddComment">ONGEZA COMMENT</button><div id="comList"></div></div>
+<div id="admin" class="card hidden"><h3>🛡️ Dashboard ya Admin</h3><p id="adminNote" style="font-size:13px;color:#555">Walimu wote na ujumbe wao.</p><div id="adminList"></div><h4 id="adminChatTitle">Ujumbe wa Walimu (Group)</h4><div id="adminChats"></div><h4>🔒 Ujumbe wa Siri kwa Admin</h4><div id="adminPrivateChats"></div></div>
+<div id="setting" class="card hidden"><h3 id="ph_setting">⚙️ Setting</h3>
+<label>Logo ya Shule (Link ya Picha)</label><input id="schoolLogoInput" placeholder="Weka Link ya Logo ya Shule">
+<label>Jina la Shule</label><input id="schoolNameInput" placeholder="Weka Jina la Shule">
+<button class="g" onclick="saveSchool()">HIFADHI LOGO NA JINA LA SHULE</button><br><br>
+<label id="lblLang">Lugha / Language</label><select id="lang2" onchange="document.getElementById('lang').value=this.value;setLang()"><option value="sw">Kiswahili</option><option value="en">English</option></select>
+<button class="r" onclick="logout()" id="btnLogout">TOKA / LOGOUT</button></div>
+</div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {getFirestore,collection,addDoc,getDocs,doc,setDoc,deleteDoc,query,where,orderBy} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyA6Ptgjh5sv0ftUws-YFjxJpexJ7ueZfe0",authDomain:"good-teacher-59ca3.firebaseapp.com",projectId:"good-teacher-59ca3",storageBucket:"good-teacher-59ca3.firebasestorage.app",messagingSenderId:"717722471557",appId:"1:717722471557:web:20c9fa12b80f77f75cadec"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+const ADMIN_EMAIL="josephatsilondwa@gmail.com";
+const isAdminEmail=(e)=>e&&e.toLowerCase().trim()===ADMIN_EMAIL;
+const SUBJECTS=["Chem","Kisw","Bio","Civ","His","Geo","B/Maths","Eng","Phys"];
+let uid="",myName="Mwalimu",students=[],myProfile={},allResults=[],currentLang=localStorage.getItem("bt_lang")||"sw";
+let schoolData={logo:localStorage.getItem("bt_logo")||"",name:localStorage.getItem("bt_school")||"JINA LA SHULE"};
+function getExamName(){let c=document.getElementById("examNameCustom").value.trim();if(c)return c;return document.getElementById("examName").value;}
+function applySchool(){let l=document.getElementById("schoolLogo");let pl=document.getElementById("printLogo");let sn=document.getElementById("schoolName");let psn=document.getElementById("printSchoolName");if(schoolData.logo){l.src=schoolData.logo;l.style.display="block";pl.src=schoolData.logo;pl.style.display="block";}sn.innerText=schoolData.name;psn.innerText=schoolData.name;document.getElementById("schoolLogoInput").value=schoolData.logo;document.getElementById("schoolNameInput").value=schoolData.name=="JINA LA SHULE"?"":schoolData.name;}
+window.saveSchool=()=>{schoolData.logo=document.getElementById("schoolLogoInput").value.trim();schoolData.name=document.getElementById("schoolNameInput").value.trim()||"JINA LA SHULE";localStorage.setItem("bt_logo",schoolData.logo);localStorage.setItem("bt_school",schoolData.name);applySchool();alert("Imehifadhiwa!");}
+setTimeout(()=>{document.getElementById("status").innerText="✅ Tayari - Ingia";},1500);
+document.getElementById("lang").value=currentLang;document.getElementById("lang2").value=currentLang;
+function grade(m){if(m>=75)return["A",1];if(m>=65)return["B",2];if(m>=45)return["C",3];if(m>=30)return["D",4];return["F",5]}
+function division(points){let best=[...points].sort((a,b)=>a-b).slice(0,7);let sum=best.reduce((a,b)=>a+b,0);let div=sum<=17?"I":sum<=22?"II":sum<=25?"III":sum<=33?"IV":"0";return{sum,div}}
+const LANG={
+sw:{slogan:"Elimu Bora, Mwalimu Bora, Taifa Bora",login:"Ingia",btnLogin:"INGIA",btnReg:"JISAJILI MPYA",t_profile:"👤 Profile",t_students:"👨‍🎓 Wanafunzi",t_results:"📊 Matokeo",t_stats:"📈 Takwimu",t_chat:"💬 Chat",t_iris:"✨ Iris AI",t_admin:"🛡️ Admin",t_setting:"⚙️ Setting",ph_profile:"👤 Wasifu Wangu",ph_students:"👨‍🎓 Wanafunzi",lblClass:"Chagua Darasa",btnAddStudent:"ONGEZA MWANAFUNZI",ph_results:"📊 Matokeo ya Mtihani",lblResClass:"Chuja Darasa",btnSaveResults:"HIFADHI MATOKEO",btnPDF:"📄 PAKUA PDF / PRINT",ph_stats:"📈 Takwimu za Performance",ph_chat:"💬 Chat na Mwalimu Mwenzake",btnSendChat:"TUMA",btnAskIris:"ULIZA IRIS",ph_comments:"💭 Comments za Mwanafunzi",btnAddComment:"ONGEZA COMMENT",btnSaveProfile:"HIFADHI PROFILE",btnLogout:"TOKA / LOGOUT",lblLang:"Lugha / Language",ph_setting:"⚙️ Setting"},
+en:{slogan:"Quality Education, Great Teacher, Great Nation",login:"Login",btnLogin:"LOGIN",btnReg:"REGISTER NEW",t_profile:"👤 Profile",t_students:"👨‍🎓 Students",t_results:"📊 Results",t_stats:"📈 Statistics",t_chat:"💬 Chat",t_iris:"✨ Iris AI",t_admin:"🛡️ Admin",t_setting:"⚙️ Setting",ph_profile:"👤 My Profile",ph_students:"👨‍🎓 Students",lblClass:"Choose Class",btnAddStudent:"ADD STUDENT",ph_results:"📊 Exam Results",lblResClass:"Choose Class",btnSaveResults:"SAVE RESULTS",btnPDF:"📄 DOWNLOAD PDF / PRINT",ph_stats:"📈 Performance Statistics",ph_chat:"💬 Chat with Fellow Teacher",btnSendChat:"SEND",btnAskIris:"ASK IRIS",ph_comments:"💭 Student Comments",btnAddComment:"ADD COMMENT",btnSaveProfile:"SAVE PROFILE",btnLogout:"LOGOUT",lblLang:"Language",ph_setting:"⚙️ Settings"}
+};
+window.setLang=()=>{let l=document.getElementById("lang").value;currentLang=l;localStorage.setItem("bt_lang",l);document.getElementById("lang2").value=l;let d=LANG[l];document.getElementById("slogan").innerText=d.slogan;document.getElementById("authT").innerText=d.login;document.getElementById("btnLogin").innerText=d.btnLogin;document.getElementById("btnReg").innerText=d.btnReg;document.getElementById("t1").innerText=d.t_profile;document.getElementById("t2").innerText=d.t_students;document.getElementById("t3").innerText=d.t_results;document.getElementById("t4").innerText=d.t_stats;document.getElementById("t5").innerText=d.t_chat;document.getElementById("t6").innerText=d.t_iris;document.getElementById("t7").innerText=d.t_admin;document.getElementById("t8").innerText=d.t_setting;document.getElementById("ph_profile").innerText=d.ph_profile;document.getElementById("ph_students").innerText=d.ph_students;document.getElementById("lblClass").innerText=d.lblClass;document.getElementById("btnAddStudent").innerText=d.btnAddStudent;document.getElementById("ph_results").innerText=d.ph_results;document.getElementById("lblResClass").innerText=d.lblResClass;document.getElementById("btnSaveResults").innerText=d.btnSaveResults;document.getElementById("btnPDF").innerText=d.btnPDF;document.getElementById("ph_stats").innerText=d.ph_stats;document.getElementById("ph_chat").innerText=d.ph_chat;document.getElementById("btnSendChat").innerText=d.btnSendChat;document.getElementById("btnAskIris").innerText=d.btnAskIris;document.getElementById("ph_comments").innerText=d.ph_comments;document.getElementById("btnAddComment").innerText=d.btnAddComment;document.getElementById("btnSaveProfile").innerText=d.btnSaveProfile;document.getElementById("btnLogout").innerText=d.btnLogout;document.getElementById("lblLang").innerText=d.lblLang;document.getElementById("ph_setting").innerText=d.ph_setting;};
+window.tab=(id)=>{["profile","students","results","saved","stats","chat","irisBox","admin","setting"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".tab button").forEach(b=>b.classList.remove("on"));if(id=="stats")drawChart();if(id=="admin")loadAdmin();if(id=="saved")loadSaved();if(id=="irisBox")irisHello();};
+window.login=async()=>{try{await signInWithEmailAndPassword(auth,email.value,password.value)}catch(e){alert(e.message)}};
+window.register=async()=>{try{if(password.value.length<6)return alert("Password angalau 6");await createUserWithEmailAndPassword(auth,email.value,password.value);alert(currentLang=="en"?"Registered!":"Umejisajili!")}catch(e){alert(e.message)}};
+window.logout=async()=>{await signOut(auth)};
+onAuthStateChanged(auth,async(u)=>{
+if(!u){authBox.classList.remove("hidden");main.classList.add("hidden");return}
+uid=u.uid;authBox.classList.add("hidden");main.classList.remove("hidden");
+let isAdmin=isAdminEmail(u.email);
+document.getElementById("roleBadge").innerHTML=isAdmin?`<span class="badge">ADMIN - Wewe ni Admin</span>`:`<span class="badge" style="background:#0b3d91">Mwalimu</span>`;
+document.getElementById("adminAddBox").style.display=isAdmin?"block":"none";
+let snap=await getDocs(query(collection(db,"teachers"),where("uid","==",uid)));
+if(snap.size>0){myProfile=snap.docs[0].data();myName=myProfile.name||"Mwalimu";pName.value=myProfile.name||"";pPhone.value=myProfile.phone||"";pPhoto.value=myProfile.photo||"";pSubjects.value=myProfile.subjects||"";pClasses.value=myProfile.classes||"";pBio.value=myProfile.bio||"";updatePic(myProfile.photo,myProfile.name);myInfo.innerHTML=`<b>${myProfile.name||""}</b><br>${myProfile.phone||""}<br>Masomo: ${myProfile.subjects||""}<br>Madarasa: ${myProfile.classes||""}`;}
+else{myName=u.email.split("@")[0];updatePic("",myName);}
+setLang();applySchool();loadStudents();loadChat();loadPrivateChat();loadComments();loadAllResults();loadSaved();
+});
+function updatePic(photo,name){let img=document.getElementById("myPic");let ini=document.getElementById("myInitial");if(photo){img.src=photo;img.style.display="block";ini.style.display="none";}else{img.style.display="none";ini.style.display="flex";ini.innerText=(name||"J").charAt(0).toUpperCase();}}
+window.saveProfile=async()=>{let data={uid,email:auth.currentUser.email,name:pName.value,phone:pPhone.value,photo:pPhoto.value,subjects:pSubjects.value,classes:pClasses.value,bio:pBio.value,updated:new Date().toISOString()};await setDoc(doc(db,"teachers",uid),data);myProfile=data;myName=data.name;updatePic(data.photo,data.name);alert(currentLang=="en"?"Profile Saved!":"Profile Imehifadhiwa!");loadAdmin();};
+window.addStudent=async()=>{if(!isAdminEmail(auth.currentUser.email))return alert("Admin tu anaweza kuongeza wanafunzi");if(!sName.value)return alert("Jaza jina");let cls=document.getElementById("filterClass").value;await addDoc(collection(db,"students"),{uid:"ADMIN_SHARED",teacher:auth.currentUser.email,name:sName.value,cls:cls,gender:sGender.value,parent:sParent.value,created:new Date().toISOString()});sName.value="";load
